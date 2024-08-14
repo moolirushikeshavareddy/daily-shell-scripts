@@ -10,7 +10,7 @@ sudo yum install git maven java-17 docker trivy -y
 #installing jenkins
 sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
 sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
-sudo yum install jenkins
+sudo yum install jenkins -y
 sudo systemctl enable jenkins
 sudo systemctl start jenkins
 sudo systemctl status jenkins
@@ -23,4 +23,5 @@ sudo unzip sonarqube-8.9.6.50800.zip
 sudo useradd sonar
 sudo chown sonar:sonar sonarqube-8.9.6.50800 -R
 sudo chmod 777 sonarqube-8.9.6.50800 -R
-#sudo sh /sonarqube-8.9.6.50800/bin/linux-86x64/sonar.sh start
+#sudo sh /sonarqube-8.9.6.50800/bin/linux-x86-64/sonar.sh start
+sudo sh /sonarqube-8.9.6.50800/bin/linux-x86-64/sonar.sh start
