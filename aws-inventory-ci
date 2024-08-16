@@ -1,0 +1,75 @@
+pipeline {
+    agent any
+    
+    tools{
+        maven 'maven'
+        dockerTool 'docker'
+    }
+
+    stages {
+       stage("clean workspace-1/9"){
+            steps{
+                cleanWs()
+            }
+        }
+        
+        stage("Git checkout-2/9"){
+            steps{
+                git branch: 'main', url: 'https://github.com/moolirushikeshavareddy/aws-inventory.git'
+            }
+        }
+        
+        stage("compile-3/9"){
+            steps{
+                sh 'mvn compile'
+            }
+        }
+        
+        stage("build and test-4/9"){
+            steps{
+                sh 'mvn test'
+            }
+        }
+        
+        stage("clean package-5/9"){
+            steps{
+                sh 'mvn clean package'
+            }
+        }
+        
+        stage("static code Analysis-6/9"){
+            steps{
+                sh '''
+                mvn sonar:sonar \
+                  -Dsonar.projectKey=netflix \
+                  -Dsonar.host.url=http://54.91.173.107:9000 \
+                  -Dsonar.login=fe7f76266b2e0f723d492eb11ebecb1d00ecaf4e
+                '''
+            }
+        }
+        
+        stage("docker build image-7/9"){
+            steps{
+                sh 'docker build -t netflix${BUILD_NUMBER} .'
+            }
+        }
+        
+        stage("docker tag & push image to dockerhub-8/9"){
+            steps{
+                script{
+                    withDockerRegistry(credentialsId: 'docker-creds') {
+                        sh 'docker tag netflix${BUILD_NUMBER} rushi78744/netflix:v${BUILD_NUMBER}'
+                        sh 'docker push rushi78744/netflix:v${BUILD_NUMBER}'
+                    }
+                }
+            }
+        }
+        
+        stage("clear workspace-9/9"){
+            steps{
+                cleanWs()
+            }
+        }
+        
+    }
+}
