@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+
+    stages{
+        
+        stage("clean workspace-1/4"){
+            steps{
+                cleanWs()
+            }
+        }
+        
+        stage("docker push image-2/4"){
+            steps{
+                sh 'docker pull rushi78744/netflix:v${BUILD_NUMBER}'
+            }
+        }
+        
+        stage("run docker container-3/4"){
+            steps{
+                sh 'docker run -d --name aws-inventory${BUILD_NUMBER} -p 208${BUILD_NUMBER}:8080 rushi78744/netflix:v${BUILD_NUMBER}'
+            }
+        }
+        
+        stage("clear workspace-4/4"){
+            steps{
+                cleanWs()
+            }
+        }
+    }
+}
