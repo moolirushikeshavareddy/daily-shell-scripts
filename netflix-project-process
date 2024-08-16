@@ -1,0 +1,35 @@
+4 files
+
+1)jenkins-ci
+2)jenkins-cd
+3)dockerfile
+4)yamlfile
+
+
+1-jenkins-ci
+-------------
+a)clean workspace
+b)git clone code
+c)mvn compile
+d)mvn test
+e)mvn clean package
+f)static code analysis (sonarqube)  --------->sh sonarqube-version/bin/linux86-64x/sonar.sh start
+g)docker image build  ------------------------>docker run hello-world
+h)trivy image scan
+i)docker imgae tag & push to dockerhub-------->docker login
+j)clean workspace
+
+2-jenkins-cd
+------------
+a)clean workspace
+b)pull docker image from dockerhub
+c)docker run image-------------------------------> image can be accesed in internet
+d)clean workspace
+
+3-dockerfile 
+-------------
+FROM ubuntu:latest
+WORKDIR /app
+COPY /target/netflix.jar ./target/netflix.jar
+EXPOSE 8080
+RUN ["java", "-jar", "/target/netflix.jar"]
