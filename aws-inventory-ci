@@ -7,37 +7,37 @@ pipeline {
     }
 
     stages {
-       stage("clean workspace-1/9"){
+       stage("clean workspace-1/10"){
             steps{
                 cleanWs()
             }
         }
         
-        stage("Git checkout-2/9"){
+        stage("Git checkout-2/10"){
             steps{
                 git branch: 'main', url: 'https://github.com/moolirushikeshavareddy/aws-inventory.git'
             }
         }
         
-        stage("compile-3/9"){
+        stage("compile-3/10"){
             steps{
                 sh 'mvn compile'
             }
         }
         
-        stage("build and test-4/9"){
+        stage("build and test-4/10"){
             steps{
                 sh 'mvn test'
             }
         }
         
-        stage("clean package-5/9"){
+        stage("clean package-5/10"){
             steps{
                 sh 'mvn clean package'
             }
         }
         
-        stage("static code Analysis-6/9"){
+        stage("static code Analysis-6/10"){
             steps{
                 sh '''
                 mvn sonar:sonar \
@@ -48,13 +48,18 @@ pipeline {
             }
         }
         
-        stage("docker build image-7/9"){
+        stage("docker build image-7/10"){
             steps{
                 sh 'docker build -t netflix${BUILD_NUMBER} .'
             }
         }
+        stage("docker image scan-8/10"){
+            steps{
+                sh 'trivy image netflix${BUILD_NUMBER} > trivy-${BUILD_NUMBER}.json
+            }
+        }
         
-        stage("docker tag & push image to dockerhub-8/9"){
+        stage("docker tag & push image to dockerhub-9/10"){
             steps{
                 script{
                     withDockerRegistry(credentialsId: 'docker-creds') {
@@ -65,7 +70,7 @@ pipeline {
             }
         }
         
-        stage("clear workspace-9/9"){
+        stage("clear workspace-10/10"){
             steps{
                 cleanWs()
             }
